@@ -22,6 +22,8 @@ import { durationSm, fontWeightBold } from 'bpk-tokens/tokens/base.es6';
 import PropTypes from 'prop-types';
 import { cssModules, withDefaultProps } from 'bpk-react-utils';
 import BpkAnimateHeight from 'bpk-animate-height';
+// import BpkDemo from 'bpk-component-demo';
+import bpkDemo from '../../../../bpk-component-demo';
 import BpkBannerAlert, {
   ALERT_TYPES,
   BpkBannerAlertDismissable,
@@ -39,6 +41,11 @@ import STYLES from './bpk-banner-alerts-page.scss';
 
 const getClassName = cssModules(STYLES);
 const componentClassName = getClassName('bpk-banner-alerts-page__component');
+
+const BannerAlertDemo = bpkDemo(BpkBannerAlert, {
+  message: 'hello',
+  type: 'success',
+});
 
 const BannerAlert = withDefaultProps(BpkBannerAlert, {
   className: componentClassName,
@@ -289,13 +296,7 @@ const components = [
         or some neutral information.
       </Paragraph>,
     ],
-    examples: [
-      <BannerAlert message="Neutral alert." type={ALERT_TYPES.NEUTRAL} />,
-      <BannerAlert message="Successful alert." type={ALERT_TYPES.SUCCESS} />,
-      <BannerAlert message={richMessage} type={ALERT_TYPES.SUCCESS} />,
-      <BannerAlert message="Warn alert." type={ALERT_TYPES.WARN} />,
-      <BannerAlert message="Error alert." type={ALERT_TYPES.ERROR} />,
-    ],
+    examples: [<BannerAlertDemo />],
   },
   {
     id: 'expandable',
