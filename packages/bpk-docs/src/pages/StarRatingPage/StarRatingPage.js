@@ -27,10 +27,16 @@ import starRatingReadme from 'bpk-component-star-rating/readme.md';
 import DocsPageBuilder from './../../components/DocsPageBuilder';
 import Paragraph from './../../components/Paragraph';
 import IntroBlurb from './../../components/neo/IntroBlurb';
+import bpkDemo from '../../../../bpk-component-demo';
 
 const InteractiveStarRating = withInteractiveStarRatingState(
   BpkInteractiveStarRating,
 );
+
+const StarRatingDemo = bpkDemo(BpkStarRating, {
+  rating: 3.5,
+  ratingLabel: '3.5 stars',
+});
 
 const components = [
   {
@@ -42,7 +48,7 @@ const components = [
         half star intervals.
       </Paragraph>,
     ],
-    examples: [<BpkStarRating rating={3.5} ratingLabel="3.5 stars" />],
+    examples: [<StarRatingDemo />],
   },
   {
     id: 'large',
@@ -50,7 +56,15 @@ const components = [
     blurb: [
       <Paragraph>Similar to the default, but in a large size.</Paragraph>,
     ],
-    examples: [<BpkStarRating rating={3.5} ratingLabel="3.5 stars" large />],
+    examples: [
+      <StarRatingDemo
+        customPropValues={{
+          rating: 3.5,
+          ratingLabel: '3.5 stars',
+          large: true,
+        }}
+      />,
+    ],
   },
   {
     id: 'interactive',
@@ -70,6 +84,19 @@ const components = [
         }
       />,
     ],
+  },
+  {
+    id: 'playground',
+    title: 'Playground',
+    blurb: [
+      <Paragraph>
+        The Backpack playground lets you directly modify prop-values and see the
+        results in your browser. It also lets you get a code snippet for the
+        component as you see it before you! We really couldn't make it easier
+        for you! (Well, maybe we could)
+      </Paragraph>,
+    ],
+    examples: [<StarRatingDemo />],
   },
 ];
 

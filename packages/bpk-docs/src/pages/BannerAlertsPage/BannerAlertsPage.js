@@ -46,6 +46,10 @@ const BannerAlertDemo = bpkDemo(BpkBannerAlert, {
   message: 'hello',
   type: 'success',
 });
+const BannerAlertDemo = bpkDemo(BpkBannerAlert, {
+  message: 'Banner alert!',
+  type: 'neutral',
+});
 
 const BannerAlert = withDefaultProps(BpkBannerAlert, {
   className: componentClassName,
@@ -296,7 +300,10 @@ const components = [
         or some neutral information.
       </Paragraph>,
     ],
-    examples: [<BannerAlertDemo />],
+    examples: [
+      <BannerAlertDemo />,
+      <BannerAlertDemo customPropValues={{ type: 'warn' }} />,
+    ],
   },
   {
     id: 'expandable',

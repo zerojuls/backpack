@@ -20,6 +20,7 @@
 import React, { type Node, type ComponentType, type String, type ObjectType } from 'react';
 import PropTypes from 'prop-types';
 import { wrapDisplayName } from 'bpk-react-utils';
+import { BpkCodeBlock } from 'bpk-component-code';
 import reactDocs from 'react-docgen';
 import requiredDefaultProps from './requiredDefaultProps.json';
 import DemoControl from './DemoControl';
@@ -35,7 +36,7 @@ type BpkDemoState = {
 
 export default function bpkDemo(
   Component: ComponentType<any>,
-  requiredPropValues: ObjectType,
+  defaultPropValues: ObjectType,
 ): ComponentType<any> {
   class BpkDemo extends React.Component<BpkDemo, BpkDemoState> {
     element: ?HTMLElement;
@@ -63,19 +64,25 @@ export default function bpkDemo(
       const componentProps = {};
       const propTypes = Component.propTypes;
       const defaultProps = Component.defaultProps;
-      // Foreach prop, if has default prop value, add to componentProps with default value.
-      // If no default value is provided by the component, we need to look it up
-      // from requiredPropValues
+
+      const customPropValues = this.props.customPropValues;
+      // For each prop, if a customPropValue is provided, that will be used.
+      // Otherwise, if a defaultPropValue is provided, that will be used instead.
+      // As a last resort, the defaultProp value from the component itself will be used.
       for (let i = 0; i < Object.keys(propTypes).length; i += 1) {
         const propName = Object.keys(propTypes)[i];
         console.log(propName);
-        let defaultPropValue = null;
+        let propValue = null;
         if (Object.keys(defaultProps).includes(propName)) {
-          defaultPropValue = defaultProps[propName];
-        } else {
-          defaultPropValue = requiredPropValues[propName];
+          propValue = defaultProps[propName];
         }
-        componentProps[propName] = defaultPropValue;
+        if (Object.keys(defaultPropValues).includes(propName)) {
+          propValue = defaultPropValues[propName];
+        }
+        if (Object.keys(customPropValues).includes(propName)) {
+          propValue = customPropValues[propName];
+        }
+        componentProps[propName] = propValue;
       }
       this.setState({ props: componentProps });
     };
@@ -89,6 +96,19 @@ export default function bpkDemo(
             <DemoControl onChange={this.onPropChanged} value={this.state.props[p]} propName={p} />
           ))}
           <Component {...this.state.props} {...rest} />
+          <BpkCodeBlock>
+            {`import BpkComponentStarRating from 'bpk-component-star-rating';
+
+...
+
+            return (
+              <BpkComponentStarRating
+maxRating: 5
+rating: 3.5
+large: true
+                >
+            );`}
+          </BpkCodeBlock>
         </div>
       );
     }
@@ -98,11 +118,13 @@ export default function bpkDemo(
   BpkDemo.propTypes = {
     style: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     className: PropTypes.string,
+    customPropValues: PropTypes.object,
   };
 
   BpkDemo.defaultProps = {
     style: null,
     className: null,
+    customPropValues: {},
   };
 
   return BpkDemo;
