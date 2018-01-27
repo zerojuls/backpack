@@ -19,11 +19,18 @@
 
 import React, { type Node, type ComponentType, type String, type ObjectType } from 'react';
 import PropTypes from 'prop-types';
+import querystring from 'querystring';
 import { wrapDisplayName } from 'bpk-react-utils';
 import { BpkCodeBlock } from 'bpk-component-code';
+import EditIconSm from 'bpk-component-icon/sm/edit';
 import reactDocs from 'react-docgen';
 import requiredDefaultProps from './requiredDefaultProps.json';
 import DemoControl from './DemoControl';
+import { cssModules } from 'bpk-react-utils';
+
+import STYLES from './bpk-demo.scss';
+
+const getClassName = cssModules(STYLES);
 
 type BpkDemo = {
   className: ?string,
@@ -49,15 +56,33 @@ export default function bpkDemo(
 
       this.state = {
         props: {},
+        code: 'hello!',
       };
     }
+
+    generateCode = props => {
+      return `import BpkComponentStarRating from 'bpk-component-star-rating';
+
+    ...
+
+    return (
+        <BpkComponentStarRating
+            maxRating: 5
+            rating: 3.5
+            large: true
+        />
+    );`;
+    };
 
     onPropChanged = (propName, newValue) => {
       console.log(propName);
       console.log(newValue);
       const newProps = JSON.parse(JSON.stringify(this.state.props));
       newProps[propName] = newValue;
-      this.setState({ props: newProps });
+      const newCode = this.generateCode(newProps);
+      this.setState({ props: newProps, code: newCode });
+      // TODO SET URI TO INCLUDE NEW this.state.props WITHOUT REROUTING
+      console.log(this.state.code);
     };
 
     componentWillMount = () => {
@@ -84,31 +109,50 @@ export default function bpkDemo(
         }
         componentProps[propName] = propValue;
       }
-      this.setState({ props: componentProps });
+      const code = this.generateCode(componentProps);
+      this.setState({ props: componentProps, code: code });
+      console.log(this.state.code);
     };
 
     render(): Node {
-      const { style, className, ...rest } = this.props;
+      const { compact, style, className, ...rest } = this.props;
+
+      const classNameFinal = [getClassName('bpk-demo__container')];
+      if (compact) classNameFinal.push(getClassName('bpk-demo__container--compact'));
+      if (className) classNameFinal.push(className);
+
+      const showPlayground = !compact;
 
       return (
-        <div style={style} className={className}>
-          {Object.keys(this.state.props).map((p, i) => (
-            <DemoControl onChange={this.onPropChanged} value={this.state.props[p]} propName={p} />
-          ))}
-          <Component {...this.state.props} {...rest} />
-          <BpkCodeBlock>
-            {`import BpkComponentStarRating from 'bpk-component-star-rating';
-
-...
-
-            return (
-              <BpkComponentStarRating
-maxRating: 5
-rating: 3.5
-large: true
-                >
-            );`}
-          </BpkCodeBlock>
+        <div style={style} className={classNameFinal.join(' ')}>
+          {showPlayground && (
+            <div className={getClassName('bpk-demo__props')}>
+              {Object.keys(this.state.props).map((p, i) => (
+                <DemoControl
+                  className={getClassName('bpk-demo__prop-control')}
+                  onChange={this.onPropChanged}
+                  value={this.state.props[p]}
+                  propName={p}
+                />
+              ))}
+            </div>
+          )}
+          <div className={getClassName('bpk-demo__component')}>
+            <Component {...this.state.props} {...rest} />
+          </div>
+          {compact && (
+            <a
+              href={`#playground?${querystring.stringify(this.state.props)}`}
+              className={getClassName('bpk-demo__controls')}
+            >
+              <EditIconSm />
+            </a>
+          )}
+          {showPlayground && (
+            <div className={getClassName('bpk-demo__code')}>
+              <BpkCodeBlock>{this.state.code}</BpkCodeBlock>
+            </div>
+          )}
         </div>
       );
     }
@@ -116,12 +160,14 @@ large: true
   BpkDemo.displayName = wrapDisplayName(Component, 'bpkDemo');
 
   BpkDemo.propTypes = {
+    compact: PropTypes.bool,
     style: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     className: PropTypes.string,
     customPropValues: PropTypes.object,
   };
 
   BpkDemo.defaultProps = {
+    compact: true,
     style: null,
     className: null,
     customPropValues: {},

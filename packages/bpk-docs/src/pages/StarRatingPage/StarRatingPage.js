@@ -37,6 +37,12 @@ const StarRatingDemo = bpkDemo(BpkStarRating, {
   rating: 3.5,
   ratingLabel: '3.5 stars',
 });
+const StarRatingDemo = bpkDemo(BpkStarRating, {
+  rating: 3.5,
+  ratingLabel: '3.5 stars',
+});
+const DemoDemo = bpkDemo(StarRatingDemo, {});
+const DemoDemoDemo = bpkDemo(DemoDemo, {});
 
 const components = [
   {
@@ -96,7 +102,11 @@ const components = [
         for you! (Well, maybe we could)
       </Paragraph>,
     ],
-    examples: [<StarRatingDemo />],
+    examples: [
+      <StarRatingDemo compact={false} />,
+      // <DemoDemo compact={false} />,
+      // <DemoDemoDemo compact={false} />,
+    ],
   },
 ];
 

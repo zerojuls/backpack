@@ -48,7 +48,7 @@ const DemoNumberComponent = (props: Props) => {
       <BpkInput
         className={className}
         value={value}
-        onChange={event => onChange(parseInt(event.target.value))}
+        onChange={event => onChange(parseFloat(event.target.value))}
         label={propName}
         {...rest}
       />

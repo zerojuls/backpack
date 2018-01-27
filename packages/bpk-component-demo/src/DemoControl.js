@@ -66,7 +66,7 @@ const DemoControl = (props: Props) => {
 
   return (
     <EditorComponent
-      className={getClassName('bpk-demo__prop-editor')}
+      className={className}
       value={value}
       onChange={newValue => {
         onChange(propName, newValue);
