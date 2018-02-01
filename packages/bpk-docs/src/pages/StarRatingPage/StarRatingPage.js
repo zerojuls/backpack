@@ -43,6 +43,15 @@ const StarRatingDemo = bpkDemo(BpkStarRating, {
 });
 const DemoDemo = bpkDemo(StarRatingDemo, {});
 const DemoDemoDemo = bpkDemo(DemoDemo, {});
+const StarRatingDemo = bpkDemo(
+  BpkStarRating,
+  'BpkComponentStarRating',
+  'bpk-compopnent-star-rating',
+  {
+    rating: 3.5,
+    ratingLabel: '3.5 stars',
+  },
+);
 
 const components = [
   {

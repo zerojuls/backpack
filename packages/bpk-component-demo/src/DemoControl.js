@@ -44,8 +44,6 @@ type Props = {
 const DemoControl = (props: Props) => {
   const { propName, className, onChange, value, ...rest } = props;
 
-  console.log(value);
-
   let EditorComponent = null;
   switch (typeof value) {
     case 'boolean':

@@ -17,13 +17,19 @@
  */
 /* @flow */
 
-import React, { type Node, type ComponentType, type String, type ObjectType } from 'react';
+import React, {
+  type Node,
+  type ComponentType,
+  type String,
+  type ObjectType,
+} from 'react';
 import PropTypes from 'prop-types';
 import querystring from 'querystring';
 import { wrapDisplayName } from 'bpk-react-utils';
 import { BpkCodeBlock } from 'bpk-component-code';
 import EditIconSm from 'bpk-component-icon/sm/edit';
 import reactDocs from 'react-docgen';
+import { browserHistory, PropTypes as RouterPropTypes } from 'react-router';
 import requiredDefaultProps from './requiredDefaultProps.json';
 import DemoControl from './DemoControl';
 import { cssModules } from 'bpk-react-utils';
@@ -43,6 +49,8 @@ type BpkDemoState = {
 
 export default function bpkDemo(
   Component: ComponentType<any>,
+  componentName: String,
+  packageName: String,
   defaultPropValues: ObjectType,
 ): ComponentType<any> {
   class BpkDemo extends React.Component<BpkDemo, BpkDemoState> {
@@ -60,43 +68,26 @@ export default function bpkDemo(
       };
     }
 
-    generateCode = props => {
-      return `import BpkComponentStarRating from 'bpk-component-star-rating';
-
-    ...
-
-    return (
-        <BpkComponentStarRating
-            maxRating: 5
-            rating: 3.5
-            large: true
-        />
-    );`;
-    };
-
-    onPropChanged = (propName, newValue) => {
-      console.log(propName);
-      console.log(newValue);
-      const newProps = JSON.parse(JSON.stringify(this.state.props));
-      newProps[propName] = newValue;
-      const newCode = this.generateCode(newProps);
-      this.setState({ props: newProps, code: newCode });
-      // TODO SET URI TO INCLUDE NEW this.state.props WITHOUT REROUTING
-      console.log(this.state.code);
-    };
-
     componentWillMount = () => {
-      const componentProps = {};
-      const propTypes = Component.propTypes;
-      const defaultProps = Component.defaultProps;
+      // TODO THIS ROUTE-CHANGE LISTENER DOESN'T WORK!
+      browserHistory.listen(location => {
+        if (`${location}`.includes('?')) {
+          this.setState({
+            props: this.getUrlProps(),
+          });
+        }
+      });
 
-      const customPropValues = this.props.customPropValues;
+      const componentProps = {};
+      const { propTypes, defaultProps } = Component;
+
+      const { customPropValues } = this.props;
+      const urlParameterPropValues = this.getUrlProps();
       // For each prop, if a customPropValue is provided, that will be used.
       // Otherwise, if a defaultPropValue is provided, that will be used instead.
       // As a last resort, the defaultProp value from the component itself will be used.
       for (let i = 0; i < Object.keys(propTypes).length; i += 1) {
         const propName = Object.keys(propTypes)[i];
-        console.log(propName);
         let propValue = null;
         if (Object.keys(defaultProps).includes(propName)) {
           propValue = defaultProps[propName];
@@ -107,18 +98,85 @@ export default function bpkDemo(
         if (Object.keys(customPropValues).includes(propName)) {
           propValue = customPropValues[propName];
         }
+        if (
+          !this.props.compact &&
+          Object.keys(urlParameterPropValues).includes(propName)
+        ) {
+          propValue = urlParameterPropValues[propName];
+        }
         componentProps[propName] = propValue;
       }
       const code = this.generateCode(componentProps);
-      this.setState({ props: componentProps, code: code });
-      console.log(this.state.code);
+      this.setState({ props: componentProps, code });
+    };
+
+    onPropChanged = (propName, newValue) => {
+      const newProps = JSON.parse(JSON.stringify(this.state.props));
+      newProps[propName] = newValue;
+      const newCode = this.generateCode(newProps);
+      this.setState({ props: newProps, code: newCode });
+      browserHistory.push(
+        `${
+          `${window.location}`.split('?')[0].split('#')[0]
+        }?${querystring.stringify(newProps)}#playground`,
+      );
+    };
+
+    getUrlProps = () => {
+      const location = `${window.location}`;
+      let urlPropQueryString = '';
+      if (location.split('?').length > 1) {
+        urlPropQueryString = location.split('?')[1];
+      }
+      if (urlPropQueryString.split('#').length > 1) {
+        urlPropQueryString = location.split('#')[0];
+      }
+      const props = querystring.parse(urlPropQueryString);
+      if (props === undefined) {
+        return {};
+      }
+      console.log(props);
+      for (let p = 0; p < Object.keys(props).length; p += 1) {
+        const propName = Object.keys(props)[p];
+        console.log(propName);
+        console.log(props[propName]);
+        if (props[propName] === 'true') {
+          props[propName] = true;
+        } else if (props[propName] === 'false') {
+          props[propName] = false;
+        } else if (props[propName].match(/([0-9]+)?(\.?[0-9]+)/)) {
+          props[propName] = parseFloat(props[propName]);
+        }
+      }
+      return props;
+    };
+
+    generateCode = props => {
+      let finalString = `import ${componentName} from ${packageName};\n\n  ...\n\n`;
+      finalString += `  return (\n    <${componentName}\n`;
+      for (let p = 0; p < Object.keys(props).length; p += 1) {
+        const propName = Object.keys(props)[p];
+        const propValue = props[propName];
+        if (propValue !== Component.defaultProps[propName]) {
+          if (typeof propValue === 'string') {
+            finalString += `      ${propName}="${propValue}"\n`;
+          } else if (typeof propValue === 'boolean' && propValue === true) {
+            finalString += `      ${propName}\n`;
+          } else {
+            finalString += `      ${propName}={${propValue}}\n`;
+          }
+        }
+      }
+      finalString += `    />\n  );`;
+      return finalString;
     };
 
     render(): Node {
       const { compact, style, className, ...rest } = this.props;
 
       const classNameFinal = [getClassName('bpk-demo__container')];
-      if (compact) classNameFinal.push(getClassName('bpk-demo__container--compact'));
+      if (compact)
+        classNameFinal.push(getClassName('bpk-demo__container--compact'));
       if (className) classNameFinal.push(className);
 
       const showPlayground = !compact;
@@ -127,7 +185,7 @@ export default function bpkDemo(
         <div style={style} className={classNameFinal.join(' ')}>
           {showPlayground && (
             <div className={getClassName('bpk-demo__props')}>
-              {Object.keys(this.state.props).map((p, i) => (
+              {Object.keys(this.state.props).map(p => (
                 <DemoControl
                   className={getClassName('bpk-demo__prop-control')}
                   onChange={this.onPropChanged}
@@ -142,7 +200,7 @@ export default function bpkDemo(
           </div>
           {compact && (
             <a
-              href={`#playground?${querystring.stringify(this.state.props)}`}
+              href={`?${querystring.stringify(this.state.props)}#playground`}
               className={getClassName('bpk-demo__controls')}
             >
               <EditIconSm />
@@ -163,7 +221,7 @@ export default function bpkDemo(
     compact: PropTypes.bool,
     style: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     className: PropTypes.string,
-    customPropValues: PropTypes.object,
+    customPropValues: PropTypes.object, // eslint-disable-line react/forbid-prop-types
   };
 
   BpkDemo.defaultProps = {
