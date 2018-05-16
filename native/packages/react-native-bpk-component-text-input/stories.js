@@ -82,6 +82,7 @@ storiesOf('react-native-bpk-component-text-input', module)
         initialValue=""
         style={styles.input}
         placeholder="3 letter airport code"
+        testID="empty-input"
       />
       <StatefulBpkTextInput
         label="Input with value and description"

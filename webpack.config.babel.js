@@ -141,13 +141,12 @@ const config = {
         }),
       },
       {
-        test: /\.(jpg|png|svg)$/,
+        test: /\.(jpg|png|svg|mp4)$/,
         exclude: /node_modules/,
         use: [
           {
             loader: 'file-loader',
             query: {
-              limit: 10000,
               name: '[name]_[hash].[ext]',
             },
           },
