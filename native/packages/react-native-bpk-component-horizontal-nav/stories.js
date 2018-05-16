@@ -38,17 +38,19 @@ const styles = StyleSheet.create({
 class ManagedNav extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = { selectedId: '2' };
   }
   render() {
     return (
-      <BpkHorizontalNav selectedId={this.state.selectedId}>
+      <BpkHorizontalNav selectedId={this.state.selectedId} {...this.props}>
         <BpkHorizontalNavItem
           id="0"
           onPress={() => {
             this.setState({ selectedId: '0' });
           }}
           title="One"
+          testID="nav-tab-0"
         />
         <BpkHorizontalNavItem
           id="1"
@@ -56,6 +58,7 @@ class ManagedNav extends React.Component {
             this.setState({ selectedId: '1' });
           }}
           title="Two (Long Title)"
+          testID="nav-tab-1"
         />
         <BpkHorizontalNavItem
           id="2"
@@ -63,6 +66,7 @@ class ManagedNav extends React.Component {
             this.setState({ selectedId: '2' });
           }}
           title="Three"
+          testID="nav-tab-2"
         />
       </BpkHorizontalNav>
     );
@@ -105,23 +109,7 @@ storiesOf('react-native-bpk-component-horizontal-nav', module)
   .addDecorator(CenterDecorator)
   .add('docs:default', () => (
     <View style={styles.bottomMargin}>
-      <BpkHorizontalNav selectedId="1">
-        <BpkHorizontalNavItem
-          title="Flights"
-          id="0"
-          onPress={action('Nav item one pressed')}
-        />
-        <BpkHorizontalNavItem
-          title="Hotels"
-          id="1"
-          onPress={action('Nav item two pressed')}
-        />
-        <BpkHorizontalNavItem
-          title="Car hire"
-          id="2"
-          onPress={action('Nav item three pressed')}
-        />
-      </BpkHorizontalNav>
+      <ManagedNav testID="nav" />
     </View>
   ))
   .add('docs:small', () => (

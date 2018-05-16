@@ -9,7 +9,10 @@
     "android:emulator": "$ANDROID_HOME/tools/emulator -avd bpk-avd",
     "android": "npm run android:emulator & react-native run-android",
     "test": "jest --coverage",
-    "storybook": "storybook start -p 7007 --root ../"
+    "storybook": "storybook start -p 7007 --root ../",
+    "detox": "detox",
+    "test:e2e": "detox test -c ios.sim.debug",
+    "test:e2e:build": "detox build"
   },
   "rnpm": {
     "assets": [
@@ -19,6 +22,7 @@
   "devDependencies": {
     "@storybook/react-native": "^3.3.10",
     "babel-preset-react-native": "^4.0.0",
+    "detox": "^7.3.7",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
     "react-native": "^0.55.3",
