@@ -32,6 +32,7 @@ import Paragraph from './../../components/neo/Paragraph';
 import UsageTable from './../../components/UsageTable';
 import SassdocLink from './../../components/SassdocLink';
 import ComponentScreenshots from './ComponentScreenshots';
+import ComponentVideos from './ComponentVideos';
 import PresentationBlock from './../../components/PresentationBlock';
 
 import STYLES from './NeoDocsPageBuilder.scss';
@@ -90,6 +91,10 @@ const ComponentExample = component => {
     <ComponentScreenshots screenshots={component.screenshots} />
   ) : null;
 
+  const videos = (component.videos || []).length ? (
+    <ComponentVideos videos={component.videos} />
+  ) : null;
+
   const blurb = component.blurb ? toNodes(component.blurb) : null;
 
   const readme = component.readme
@@ -124,6 +129,7 @@ const ComponentExample = component => {
       {blurb}
       {tokenMap}
       {screenshots}
+      {videos}
       {examples}
       {readme}
       {sassdocLink}
@@ -243,6 +249,15 @@ NeoDocsPageBuilder.propTypes = {
           width: PropTypes.number.isRequired,
           height: PropTypes.number.isRequired,
           altText: PropTypes.string.isRequired,
+          subText: PropTypes.string.isRequired,
+        }),
+      ),
+      videos: PropTypes.arrayOf(
+        PropTypes.shape({
+          title: PropTypes.string.isRequired,
+          src: PropTypes.string.isRequired,
+          width: PropTypes.number.isRequired,
+          height: PropTypes.number.isRequired,
           subText: PropTypes.string.isRequired,
         }),
       ),
