@@ -19,10 +19,8 @@
 import React from 'react';
 import readme from 'react-native-bpk-component-switch/readme.md';
 
-import iosScreenshotDefault from 'react-native-bpk-component-switch/screenshots/ios/default.png';
-import androidScreenshotDefault from 'react-native-bpk-component-switch/screenshots/android/default.png';
-
-import iosVideo from 'react-native-bpk-component-switch/video.mp4';
+import androidVideo from 'react-native-bpk-component-switch/android.mp4';
+import iosVideo from 'react-native-bpk-component-switch/ios.mp4';
 import IntroBlurb from './../../components/neo/IntroBlurb';
 import DocsPageBuilder from './../../components/DocsPageBuilder';
 import DocsPageWrapper from './../../components/neo/DocsPageWrapper';
@@ -31,24 +29,6 @@ const components = [
   {
     id: 'default',
     title: 'Default',
-    screenshots: [
-      {
-        title: 'iOS',
-        width: 750,
-        height: 1334,
-        src: `/${iosScreenshotDefault}`,
-        altText: 'iOS Default Switch Component',
-        subText: '(iPhone 8 simulator)',
-      },
-      {
-        title: 'Android',
-        width: 1080,
-        height: 1920,
-        src: `/${androidScreenshotDefault}`,
-        altText: 'Android Default Switch Component',
-        subText: '(Google Pixel emulator)',
-      },
-    ],
     videos: [
       {
         title: 'iOS',
@@ -61,8 +41,8 @@ const components = [
         title: 'Android',
         width: 750,
         height: 1334,
-        src: `/${iosVideo}`,
-        subText: '(iPhone 8 simulator)',
+        src: `/${androidVideo}`,
+        subText: '(Google Pixel emualtor)',
       },
     ],
   },
