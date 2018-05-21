@@ -33,15 +33,7 @@ const InteractiveStarRating = withInteractiveStarRatingState(
   BpkInteractiveStarRating,
 );
 
-const StarRatingDemo = bpkDemo(BpkStarRating, {
-  rating: 3.5,
-  ratingLabel: '3.5 stars',
-});
-const StarRatingDemo = bpkDemo(BpkStarRating, {
-  rating: 3.5,
-  ratingLabel: '3.5 stars',
-});
-const DemoDemo = bpkDemo(StarRatingDemo, {});
+const DemoDemo = bpkDemo(InteractiveStarRating, {});
 const DemoDemoDemo = bpkDemo(DemoDemo, {});
 const StarRatingDemo = bpkDemo(
   BpkStarRating,

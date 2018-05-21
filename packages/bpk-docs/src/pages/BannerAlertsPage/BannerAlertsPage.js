@@ -43,10 +43,6 @@ const getClassName = cssModules(STYLES);
 const componentClassName = getClassName('bpk-banner-alerts-page__component');
 
 const BannerAlertDemo = bpkDemo(BpkBannerAlert, {
-  message: 'hello',
-  type: 'success',
-});
-const BannerAlertDemo = bpkDemo(BpkBannerAlert, {
   message: 'Banner alert!',
   type: 'neutral',
 });
