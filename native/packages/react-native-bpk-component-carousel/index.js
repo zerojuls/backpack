@@ -18,7 +18,9 @@
 
 /* @flow */
 
-import BpkCarousel, { type Props as BpkCarouselProps } from './src/BpkCarousel';
+import BpkCarousel, {
+  type Props as BpkCarouselProps,
+} from './src/BpkCarouselRecyclerView';
 import BpkCarouselItem, {
   type Props as BpkCarouselItemProps,
 } from './src/BpkCarouselItem';
