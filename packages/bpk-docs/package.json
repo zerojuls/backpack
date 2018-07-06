@@ -112,6 +112,6 @@
     "react-native-bpk-component-touchable-native-feedback": "^1.1.15",
     "react-native-bpk-component-touchable-overlay": "^1.0.24",
     "react-native-bpk-theming": "^1.0.62",
-    "uglify-loader": "^1.4.0"
+    "uglify-loader": "^2.0.0"
   }
 }
